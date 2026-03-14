@@ -1,0 +1,13 @@
+
+#Executables
+philo
+a.out
+
+#Object files
+*.o
+obj/
+
+# Editor files
+*~
+*.swp
+*.swo
