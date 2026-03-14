@@ -10,14 +10,26 @@ CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = philo
 
-all : $(NAME)
+NUM_SRC := $(words $(SRC))
+COUNT := 0
+BAR_WIDTH := 50
+
+all: make_msg $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -pthread -c $< -o $@
+	@COUNT=$$((COUNT+1)); \
+	PERCENT=$$((COUNT*100/$(NUM_SRC))); \
+	FILLED=$$((PERCENT*$(BAR_WIDTH)/100)); \
+	printf "["; \
+	for i in $$(seq 1 $$FILLED); do printf "#"; done; \
+	for i in $$(seq 1 $$(( $(BAR_WIDTH)-$$FILLED ))); do printf " "; done; \
+	printf "] %d%%\r" $$PERCENT; \
+	$(CC) $(CFLAGS) -pthread -c $< -o $@
 
-$(NAME): make_msg $(OBJ)
+$(NAME): $(OBJ)
 	@$(CC) -o $(NAME) $(OBJ)
+	@echo "\e[32m\n===================== FINISHED ======================\n\e[0m"
 
 clean: cln_msg
 	@rm -rf $(OBJ_DIR)
