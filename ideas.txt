@@ -1,0 +1,30 @@
+
+initialize all forks to 1:
+forks states:
+	1 => usable
+	0 => when is use for eating
+
+if (state == Thinking && philo->forks[id] && philo->forks[id+1])
+	state = eating
+	mutex_lock
+	forks = 0;
+	forks + 1 = 0; // forks are being used
+	while (current - time < time to eat){
+		gettime();
+		if (current - death >= time to die)
+			print philos is dead
+			put fork to 2 and fork + 1 to 2
+	}
+	death = current;
+	forks = 1;
+	forks + 1; // can now be used by another philo
+	mutex_unlock;
+
+in 	state = sleeping	
+	do same while loop but for sleeping
+	state = thinking
+
+
+eating->sleeping->thinking
+
+thinking is an idle state
