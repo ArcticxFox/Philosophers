@@ -6,7 +6,6 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-//SECOND IDEA
 typedef enum	e_state
 {
     DEAD = 1,
@@ -27,6 +26,8 @@ typedef struct	s_philo
 	t_state		state;
 }	t_philo;
 
-
+void		manage_thread(t_philo *philos, pthread_mutex_t *forks, int nb_max);
+void		*philo_routine(void *arg);
+short int	elapsed_time(struct timeval *death, t_philo *philo, long int max_time);
 
 #endif
