@@ -1,31 +1,48 @@
-#include "../header/philo.c"
+#include "../header/philo.h"
 
-
-short int	elapsed_time(struct timeval *death, t_philo *philo, long int max_time)
+time_t	elapsed_time(struct timeval start)
 {
-	long int	elapsed;
-	struct timeval	start;
 	struct timeval	end;
+	time_t		elapsed;
 	
-	gettimeofday(&start, NULL);
+	gettimeofday(&end, NULL);
+	elapsed = (end.tv_sec - start.tv_sec) * 1000 
+		+ (end.tv_usec - start.tv_usec) * 1000;
+	return (elapsed);
+}
+time_t	get_event(t_philo *philo)
+{
+	if (philo->state == EATING)
+		return (philo->time_to_eat);
+	else if (philo->state == SLEEPING)
+		return (philo->time_to_sleep);
+	else if (philo->state == DEAD)
+		return (philo->time_to_die);
+	else
+		return (0);
+
+}
+short int	ft_event(struct timeval *st_death_evt, t_philo *philo) 
+{
+	time_t		elapsed;
+	time_t		evt_dur;
+	struct timeval	start;
+	
 	elapsed = 0;
-	while (max_time - elapsed >= 0)
+	evt_dur = get_event(philo);
+	gettimeofday(&start, NULL);
+	while (evt_dur - elapsed >= 0)
 	{
-		gettimeofday(&end, NULL);
-		elapsed = (end.tv_sec - start.tv_sec) * 1000 
-			+ (end.tv_usec - start.tv_usec) * 1000;
-		if (elapsed >= philo->time_to_die && philo->state != EATING)
+		elapsed = elapsed_time(start);
+		if (philo->state != EATING 
+			&& philo->time_to_die - elapsed_time(*st_death_evt) <= 0)
 		{
 			philo->state = DEAD;
-			printf("a philo has died");
-			return (EXIT_FAILURE);
+			return (0);			
 		}
 	}
-	printf("Elapsed time: %lu seconds\n", elapsed);
 	if (philo->state == EATING)
-		gettimeofday(death, NULL);
-	if (philo->state != THINKING)
-		philo->state += 1;
-	return (EXIT_SUCCESS);
+		gettimeofday(st_death_evt, NULL);
+	return (1);
 }
 
