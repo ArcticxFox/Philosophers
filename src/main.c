@@ -18,43 +18,42 @@ void	*philo_routine(void *arg)
 	return NULL;
 }
 
-int	main(void)
+t_philo	*init_philos(char **av)
 {
-	int		i = 0;
-	int		nb_of_philos = 10;
+	int		i;
+	short int	nb_philos;
 	t_philo		*philos;
 	pthread_mutex_t	*forks;
-
-	forks = malloc(sizeof(pthread_mutex_t) * nb_of_philos);
-	while (i < nb_of_philos)
-		pthread_mutex_init(&forks[i++], NULL);
+	
 	i = 0;
-	philos = malloc(sizeof(t_philo) * nb_of_philos);
-	while (i < nb_of_philos)
+	nb_philos = atoi(av[1]);	
+	philos = malloc(sizeof(t_philo) * nb_philos);
+	forks = malloc(sizeof(pthread_mutex_t) * nb_philos);
+	while (i < nb_philos)
 	{
-		philos[i].state = THINKING;
 		philos[i].id = i;
-		philos[i].nb_philo = nb_of_philos;
+		philos[i].nb_philos = nb_philos;
+		pthread_mutex_init(&forks[i], NULL);
 		philos[i].forks = forks;
-		if (i % 2 == 0)
-			philos[i].state = SLEEPING;
-		if (i % 3 == 0)
-			philos[i].state = EATING;
+		philos[i].time_to_die = atoi(av[2]);
+		philos[i].time_to_eat = atoi(av[3]);
+		philos[i].time_to_sleep = atoi(av[4]);
+		philos[i].state = THINKING;
 		i++;
 	}
-	i = 0;
-	while (i < nb_of_philos)
-	{
-		pthread_create(&philos[i].thread, NULL, philo_routine, &philos[i]);
-		i++;
-	}
-	i = 0;
-	while (i < nb_of_philos)
-		pthread_join(philos[i++].thread, NULL);
-	i = 0;
-	while (i < nb_of_philos)
-		pthread_mutex_destroy(&forks[i++]);
-	free(forks);
+	return (philos);
+}
+
+int	main(int ac, char **av)
+{
+	t_philo		*philos;
+	
+	philos = NULL;
+	if (!parsing(ac, av))
+		return (0);	
+	philos = init_philos(av);
+	manage_thread(philos, philos[0].forks, philos[0].nb_philos);
+	free(philos[0].forks);
 	free(philos);
 	return (0);
 }
