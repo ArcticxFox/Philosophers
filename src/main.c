@@ -2,20 +2,31 @@
 
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
-	
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->forks[philo->id]);
+	t_philo		*philo;
+	struct timeval	st_death_evt;
+	short int	left;
+	short int	right;
 
-	printf("Philo %d took fork\n", philo->id);
-	if (philo->state == THINKING)
-		printf("\t- Philo is Thinking\n");
-	if (philo->state == SLEEPING)
-		printf("\t- Philo is Sleeping\n");
-	if (philo->state == EATING)
-		printf("\t- Philo is Eating\n");
-	pthread_mutex_unlock(&philo->forks[philo->id]);
-	return NULL;
+	philo = (t_philo *)arg;
+	gettimeofday(&st_death_evt, NULL);
+	left = philo->id;
+	right = (philo->id + 1) % philo->nb_philos;
+	while (philo->state != DEAD 
+	&& philo->time_to_die - elapsed_time(st_death_evt) >= 0)
+	{
+		pthread_mutex_lock(&philo->forks[left]);
+		pthread_mutex_lock(&philo->forks[right]);
+		philo->state = EATING;
+		if (!ft_event(&st_death_evt, philo))
+			break;
+		philo->state = SLEEPING;		
+		pthread_mutex_lock(&philo->forks[left]);
+		pthread_mutex_unlock(&philo->forks[right]);
+		if (!ft_event(&st_death_evt, philo))
+			break;
+		philo->state = THINKING;
+	}
+	return (NULL);
 }
 
 t_philo	*init_philos(char **av)
