@@ -26,9 +26,12 @@ typedef struct	s_philo
 	t_state		state;
 }	t_philo;
 
-void		manage_thread(t_philo *philos, pthread_mutex_t *forks, int nb_max);
-void		*philo_routine(void *arg);
-short int	elapsed_time(struct timeval *death, t_philo *philo, long int max_time);
-int	parsing(int ac, char **av);
+void	  manage_thread(t_philo *philos, pthread_mutex_t *forks, int nb_max);
+void	  *philo_routine(void *arg);
+
+time_t	elapsed_time(struct timeval start);
+short int ft_event(struct timeval *st_death_evt, t_philo *philo);
+
+int	  parsing(int ac, char **av);
 
 #endif

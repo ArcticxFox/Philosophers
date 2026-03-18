@@ -2,7 +2,7 @@ OBJ_DIR ?= ./obj
 SRC_DIR = ./src
 HDR_DIR = ./header
 
-SRC = main.c thread_management.c parsing.c
+SRC = main.c thread_management.c parsing.c get_elapsed_time.c
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 CC = cc
