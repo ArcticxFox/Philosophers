@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/19 14:38:26 by ejones            #+#    #+#             */
+/*   Updated: 2026/03/19 14:38:34 by ejones           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../header/philo.h"
 
-int	ft_isdigit(int c)
+static void	print_format(void)
 {
-	if (c >= 48 && c <= 57)
-		return (1);
-	else
-		return (0);
+	printf("./philo <nb_of_philos> <time_to_die> ");
+	printf("<time_to_eat> <time_to_sleep>\n");
+	printf("./philo <nb_of_philos> <time in ms> ");
+	printf("<time in ms> <time in ms>\n");
 }
 
 int	ft_isnb(char *str)
@@ -29,14 +41,14 @@ int	parsing(int ac, char **av)
 	i = 1;
 	if (ac != 5)
 	{
-		printf("invalid parameters\n");
+		print_format();
 		return (0);
 	}
 	while (i < ac)
 	{
 		if (!ft_isnb(av[i]))
 		{
-			printf("invalid parameters\n");
+			print_format();
 			return (0);
 		}
 		i++;
