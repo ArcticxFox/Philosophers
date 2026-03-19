@@ -6,6 +6,7 @@ a.out
 #Object files
 *.o
 obj/
+42-philosophers-tester/
 
 # Editor files
 *~
